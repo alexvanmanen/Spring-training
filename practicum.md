@@ -21,7 +21,7 @@
     - [3.2 Uitbreiden van het aantal endpoints](#32-uitbreiden-van-het-aantal-endpoints)
 - [4. Webapplicatie realiseren](#4-webapplicatie-realiseren)
     - [4.1 Maak de entiteiten aan](#41-maak-de-entiteiten-aan)
-    
+
 
 
 # Introductie
@@ -60,7 +60,7 @@ Daarnaast zijn er opdrachten die je helpen een beter begrip te krijgen van de we
 3. Open een nieuwe terminal de CertiCoach directory. Voer eerst het `git commit -am "Initial setup"` command uit (om de eerste commit te doen). Voer vervolgens de gekopieerde commando’s uit om de code naar GitHub te pushen op de main branch. Dit ziet eruit als volgt:
 
     ```bash
-    git commit -am "Initial setup" 
+    git commit -am "Initial setup"
     git remote add origin https://github.com/{jouw GitHub accountnaam}/CertiCoach.git
     git branch -M main
     git push -u origin main
@@ -68,7 +68,7 @@ Daarnaast zijn er opdrachten die je helpen een beter begrip te krijgen van de we
 ## 1.3 Dependency Management
 In de vorige opdracht hebben we dependencies allemaal dependencies geselecteerd. Deze kun terugvinden in de `pom.xml`
 
-1. Open `pom.xml` controleer of je de juiste Spring Boot versie gebruikt. Namelijk versie 3.3.4. 
+1. Open `pom.xml` controleer of je de juiste Spring Boot versie gebruikt. Namelijk versie 3.3.4.
 ```xml
     <project>
     ......
@@ -129,7 +129,7 @@ public class HelloController {
 
 ## 1.5 Inversion of Control
 We gaan de businesslogica van Hello World scheiden in een apart bestand om te laten zien hoe je een bean definieert. Hoewel het bij een simpele regel code wellicht overbodig lijkt, is dit een waardevolle stap om inzicht te geven in het principe van beans en de voordelen van het structureren van code. Dit bevordert een duidelijke scheiding van verantwoordelijkheden (low coupling), wat essentieel is voor het ontwikkelen van schaalbare en onderhoudbare applicaties.
-1. Maak het bestand `HelloProvider.java` in de package `com.ittopdogs.certicoach.provider` en zet hierin de volgende code
+1. Maak het bestand `HelloMessageProvider.java` in de package `com.ittopdogs.certicoach.provider` en zet hierin de volgende code
 ```java
 package com.ittopdogs.certicoach.provider;
 
@@ -178,7 +178,7 @@ public class HelloController {
 }
 ```
 
-4. Draai de applicatie opnieuw. Je krijgt als het goed is krijg je nu de foutmelding. De Bean `HelloMessageProvider` kan niet worden gevonden. 
+4. Draai de applicatie opnieuw. Je krijgt als het goed is krijg je nu de foutmelding. De Bean `HelloMessageProvider` kan niet worden gevonden.
 ```text
 ***************************
 APPLICATION FAILED TO START
@@ -216,7 +216,7 @@ public class HelloConfiguration {
 6. Start de Spring Boot applicatie
 7. Ga in je browser naar `localhost:8080/hello` als het goed is krijg je de response `Hello World`
 
-### Wat gebeurt er nu? 
+### Wat gebeurt er nu?
 De `@Configuration`-annotatie in Spring markeert een klasse als bron van bean-definities voor de Spring IoC-container (Inversion of Control). Het geeft aan dat de klasse één of meer methoden bevat, geannoteerd met `@Bean`, die beans aanmaken en beheren binnen de Spring-context.
 
 In het onderstaande voorbeeld is de klasse `HelloConfiguration` geannoteerd met `@Configuration`, wat betekent dat Spring de `messageProvider()`-methode, gemarkeerd met `@Bean`, gebruikt om een `HelloMessageProvider`-bean aan de IoC-container toe te voegen. Wanneer de Spring-context opstart, wordt deze bean beheerd en beschikbaar gesteld voor injectie in andere delen van de applicatie, zoals in de `HelloController`.
@@ -224,7 +224,7 @@ In het onderstaande voorbeeld is de klasse `HelloConfiguration` geannoteerd met 
 ## 1.6 Auto-configuratie
 Spring Boot doet aan auto-configuratie. Dit houdt in dat alle instellingen standaard worden ingesteld. Bijvoorbeeld dat de Tomcat webserver draait op port `8080`. Dit kun je aanpassen in de `application.yml` of de `application.properties`.
 1. Open `src/main/resources/application.properties`.
-2. Voeg een extra regel toe aan dit bestand 
+2. Voeg een extra regel toe aan dit bestand
 ```properties
 spring.application.content=CertiCoach
 server.port=80
@@ -242,7 +242,7 @@ server.port=80
      port: 80
    ```
    3. Start de applicatie opnieuw en browse naar `localhost/hello`. Als het goed is krijg je nu nog steeds _Hello World!_ te zien,
-   
+
 
 5. We gaan nu de context-path aanpassen, zodat alle endpoints beginnen met een bepaalde prefix
    1. Verander de inhoud van `application.yaml` naar het onderstaande
@@ -282,7 +282,7 @@ public class HelloMessageProviderTests {
     }
 }
 ```
-3. Draai nu alle testklassen door in IntelliJ met je rechtermuisknop op de directory `src/test/java` en klik op  `Run Tests in 'java'`. 
+3. Draai nu alle testklassen door in IntelliJ met je rechtermuisknop op de directory `src/test/java` en klik op  `Run Tests in 'java'`.
 4. Als het goed is draaien nu de tests uit twee klassen. Namelijk `HelloMessageProviderTests` en `CertiCoachApplicationTests`. Hoeveel tijd kost het elk van deze testsklassen om uitgevoerd te worden?
 
 
@@ -408,7 +408,7 @@ spring:
 
 ## 2.2 JPA entiteit toevoegen
 1. Maak de package `com.ittopdogs.certicoach.model` aan.
-2. Maak de klasse `Message.java` aan en zet hierin de onderstaande code 
+2. Maak de klasse `Message.java` aan en zet hierin de onderstaande code
 
 ```java
 import javax.persistence.Entity;
@@ -463,7 +463,7 @@ INSERT INTO message (id, content) VALUES (3, 'Goed bezig!');
 3. Start de Spring Boot applicatie op en ga naar de h2 concole en controleer of de data te vinden is.
 
 ## 2.4 JPA Repository aanmaken en gebruiken
-1. Maak de package `com.ittopdogs.certicoach.repository` 
+1. Maak de package `com.ittopdogs.certicoach.repository`
 2. Maak in deze package de klasse `MessageRepository` aan en zet hierin de onderstaande code.
 ```java
 package com.ittopdogs.certicoach.repository;
@@ -474,7 +474,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface MessageRepository extends CrudRepository<Message, Long> {
 }
 ```
-3. Maak in de package `com.ittopdogs.certicoach.controller` de klasse `MessageController` aan en geef het de onderstaande inhoud. 
+3. Maak in de package `com.ittopdogs.certicoach.controller` de klasse `MessageController` aan en geef het de onderstaande inhoud.
 ```java
 package com.ittopdogs.certicoach.controller;
 

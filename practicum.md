@@ -1114,7 +1114,6 @@ Aspect-Oriented Programming (AOP) is een programmeerparadigma waarmee je cross-c
         </dependency>
 </dependencies>
 ```
-3.
 
 ## 6.2 Eenvoudige LoggingAspect aanmaken
 1. Maak de package `com.ittopdogs.certicoach.aspect` aan.

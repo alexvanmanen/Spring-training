@@ -21,7 +21,15 @@
     - [3.2 Uitbreiden van het aantal endpoints](#32-uitbreiden-van-het-aantal-endpoints)
 - [4. Webapplicatie realiseren](#4-webapplicatie-realiseren)
     - [4.1 Maak de entiteiten aan](#41-maak-de-entiteiten-aan)
-
+- [5. Beveiliging](#5-beveiliging)
+  - [5.1 Dependency toevoegen](#51-dependency-toevoegen)
+  - [5.2 In memory authenticatie](#52-in-memory-authenticatie)
+  - [5.3 Security testen](#53-security-testen)
+  - [5.4 Message Controller](#54-message-controller)
+  - [5.5 Message Controller Integratietests](#55-messagecontrollerintegrationtests)
+  - [5.6 OAuth Authenticatie](#56-oauth-authenticatie)
+  - [5.7 JPA implementeren](#57-jpa-implementeren)
+    
 
 
 # Introductie
@@ -60,7 +68,7 @@ Daarnaast zijn er opdrachten die je helpen een beter begrip te krijgen van de we
 3. Open een nieuwe terminal de CertiCoach directory. Voer eerst het `git commit -am "Initial setup"` command uit (om de eerste commit te doen). Voer vervolgens de gekopieerde commando’s uit om de code naar GitHub te pushen op de main branch. Dit ziet eruit als volgt:
 
     ```bash
-    git commit -am "Initial setup"
+    git commit -am "Initial setup" 
     git remote add origin https://github.com/{jouw GitHub accountnaam}/CertiCoach.git
     git branch -M main
     git push -u origin main
@@ -68,7 +76,7 @@ Daarnaast zijn er opdrachten die je helpen een beter begrip te krijgen van de we
 ## 1.3 Dependency Management
 In de vorige opdracht hebben we dependencies allemaal dependencies geselecteerd. Deze kun terugvinden in de `pom.xml`
 
-1. Open `pom.xml` controleer of je de juiste Spring Boot versie gebruikt. Namelijk versie 3.3.4.
+1. Open `pom.xml` controleer of je de juiste Spring Boot versie gebruikt. Namelijk versie 3.3.4. 
 ```xml
     <project>
     ......
@@ -129,7 +137,7 @@ public class HelloController {
 
 ## 1.5 Inversion of Control
 We gaan de businesslogica van Hello World scheiden in een apart bestand om te laten zien hoe je een bean definieert. Hoewel het bij een simpele regel code wellicht overbodig lijkt, is dit een waardevolle stap om inzicht te geven in het principe van beans en de voordelen van het structureren van code. Dit bevordert een duidelijke scheiding van verantwoordelijkheden (low coupling), wat essentieel is voor het ontwikkelen van schaalbare en onderhoudbare applicaties.
-1. Maak het bestand `HelloMessageProvider.java` in de package `com.ittopdogs.certicoach.provider` en zet hierin de volgende code
+1. Maak het bestand `HelloProvider.java` in de package `com.ittopdogs.certicoach.provider` en zet hierin de volgende code
 ```java
 package com.ittopdogs.certicoach.provider;
 
@@ -178,7 +186,7 @@ public class HelloController {
 }
 ```
 
-4. Draai de applicatie opnieuw. Je krijgt als het goed is krijg je nu de foutmelding. De Bean `HelloMessageProvider` kan niet worden gevonden.
+4. Draai de applicatie opnieuw. Je krijgt als het goed is krijg je nu de foutmelding. De Bean `HelloMessageProvider` kan niet worden gevonden. 
 ```text
 ***************************
 APPLICATION FAILED TO START
@@ -216,7 +224,7 @@ public class HelloConfiguration {
 6. Start de Spring Boot applicatie
 7. Ga in je browser naar `localhost:8080/hello` als het goed is krijg je de response `Hello World`
 
-### Wat gebeurt er nu?
+### Wat gebeurt er nu? 
 De `@Configuration`-annotatie in Spring markeert een klasse als bron van bean-definities voor de Spring IoC-container (Inversion of Control). Het geeft aan dat de klasse één of meer methoden bevat, geannoteerd met `@Bean`, die beans aanmaken en beheren binnen de Spring-context.
 
 In het onderstaande voorbeeld is de klasse `HelloConfiguration` geannoteerd met `@Configuration`, wat betekent dat Spring de `messageProvider()`-methode, gemarkeerd met `@Bean`, gebruikt om een `HelloMessageProvider`-bean aan de IoC-container toe te voegen. Wanneer de Spring-context opstart, wordt deze bean beheerd en beschikbaar gesteld voor injectie in andere delen van de applicatie, zoals in de `HelloController`.
@@ -224,7 +232,7 @@ In het onderstaande voorbeeld is de klasse `HelloConfiguration` geannoteerd met 
 ## 1.6 Auto-configuratie
 Spring Boot doet aan auto-configuratie. Dit houdt in dat alle instellingen standaard worden ingesteld. Bijvoorbeeld dat de Tomcat webserver draait op port `8080`. Dit kun je aanpassen in de `application.yml` of de `application.properties`.
 1. Open `src/main/resources/application.properties`.
-2. Voeg een extra regel toe aan dit bestand
+2. Voeg een extra regel toe aan dit bestand 
 ```properties
 spring.application.content=CertiCoach
 server.port=80
@@ -242,7 +250,7 @@ server.port=80
      port: 80
    ```
    3. Start de applicatie opnieuw en browse naar `localhost/hello`. Als het goed is krijg je nu nog steeds _Hello World!_ te zien,
-
+   
 
 5. We gaan nu de context-path aanpassen, zodat alle endpoints beginnen met een bepaalde prefix
    1. Verander de inhoud van `application.yaml` naar het onderstaande
@@ -282,7 +290,7 @@ public class HelloMessageProviderTests {
     }
 }
 ```
-3. Draai nu alle testklassen door in IntelliJ met je rechtermuisknop op de directory `src/test/java` en klik op  `Run Tests in 'java'`.
+3. Draai nu alle testklassen door in IntelliJ met je rechtermuisknop op de directory `src/test/java` en klik op  `Run Tests in 'java'`. 
 4. Als het goed is draaien nu de tests uit twee klassen. Namelijk `HelloMessageProviderTests` en `CertiCoachApplicationTests`. Hoeveel tijd kost het elk van deze testsklassen om uitgevoerd te worden?
 
 
@@ -372,7 +380,7 @@ public class HelloControllerIntegrationTests {
 # 2. Spring Data JPA
 In deze opdrachten gaan we de data opslaan in een database
 ## 2.1 Database opzetten
-1. Voeg de dependencies "Spring Data JPA" en "H2 database" toe aan je project. Als het goed is is het volgende toevoegd aan je `pom.xml`
+1. Voeg de dependencies "Spring Data JPA" en "H2 database" toe aan je project. Als het goed is het volgende toevoegd aan je `pom.xml`
 ```xml
         <dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -408,7 +416,7 @@ spring:
 
 ## 2.2 JPA entiteit toevoegen
 1. Maak de package `com.ittopdogs.certicoach.model` aan.
-2. Maak de klasse `Message.java` aan en zet hierin de onderstaande code
+2. Maak de klasse `Message.java` aan en zet hierin de onderstaande code 
 
 ```java
 import javax.persistence.Entity;
@@ -463,7 +471,7 @@ INSERT INTO message (id, content) VALUES (3, 'Goed bezig!');
 3. Start de Spring Boot applicatie op en ga naar de h2 concole en controleer of de data te vinden is.
 
 ## 2.4 JPA Repository aanmaken en gebruiken
-1. Maak de package `com.ittopdogs.certicoach.repository`
+1. Maak de package `com.ittopdogs.certicoach.repository` 
 2. Maak in deze package de klasse `MessageRepository` aan en zet hierin de onderstaande code.
 ```java
 package com.ittopdogs.certicoach.repository;
@@ -474,7 +482,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface MessageRepository extends CrudRepository<Message, Long> {
 }
 ```
-3. Maak in de package `com.ittopdogs.certicoach.controller` de klasse `MessageController` aan en geef het de onderstaande inhoud.
+3. Maak in de package `com.ittopdogs.certicoach.controller` de klasse `MessageController` aan en geef het de onderstaande inhoud. 
 ```java
 package com.ittopdogs.certicoach.controller;
 
@@ -602,3 +610,486 @@ De CertiCoach applicatie is ontworpen om gebruikers te helpen met het effectief 
 
 ## 4.1 Maak de entiteiten aan
 Maak de entiteiten aan die nodig zijn. Zoals Question, Goal, etcetera.
+
+
+# 5. Beveiliging
+In deze opdrachten gaan we de webapplicatie beveiligen. We gaan dat doen door eerst authenticatie (Verifiëren wie iemand is doormiddel van inloggen). Daarna gaan we controleren wat de desbetreffende gebruiker mag doen (autorisatie). De manier die we gaan toepassen zijn:
+* In-memory authenticatie
+* OAuth2/Social login (Google, Facebook, etc.)
+* Database-gebaseerde authenticatie (met bijvoorbeeld JDBC of JPA)
+
+
+Voor nu houden we het bij in-memory authenticatie, database-gebaseerde authenticatie en OAuth2.
+
+## 5.1 Dependency toevoegen
+1. Voeg de dependency "Spring Security" toe aan je project. Als het goed is het volgende toevoegd aan je `pom.xml`
+```xml
+<dependencies>
+    <!-- bestaande dependencies -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-security</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+</dependencies>
+```
+2. Herlaad voor de zekerheid je Maven project door met de rechtermuisknop op het project of de `pom.xml` te klikken en dan `Maven -> Reload Project`
+3. Herstart de Spring Boot applicatie. Je ziet in de login het volgende staan. Kopieer het wachtwoord.
+```
+Using generated security password: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+4. Ga nu in je browser naar `localhost:8080/hello`. Als het goed is krijg je nu een login scherm te zien. 
+5. Login met username `user` en het wachtwoord dat je gekopieerd hebt uit stap 3. Als het goed is ben je nu ingelogd.
+
+## 5.2 In memory authenticatie
+1. Maak een nieuw package aan met de naam `com.ittopdogs.certicoach.configuration.security`. 
+2. Maak in deze package de klasse `SecurityConfig.java` aan met de onderstaande inhoud.
+```java
+package com.ittopdogs.certicoach.configuration.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
+
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http.csrf(Customizer.withDefaults())
+                .authorizeHttpRequests((authorize) -> {
+                    // Only users with the USER role can access /hello
+                    authorize.requestMatchers("/hello").hasRole("USER");
+
+                    // Only users with the ADMIN role can access the rest
+                    authorize.requestMatchers("/actuator/**", "/message/**").hasRole("ADMIN");
+
+                    // Deny access to any request for users without credentials
+                    authorize.anyRequest().authenticated();
+                })
+                .httpBasic(Customizer.withDefaults())
+                .anonymous(AbstractHttpConfigurer::disable);  // Disables anonymous access (users without credentials)
+
+        return http.build();
+    }
+
+
+    @Bean
+    public UserDetailsService userDetailsService(){
+
+        UserDetails alex = User.builder()
+                .username("alex")
+                .password(passwordEncoder().encode("alex"))
+                .roles("USER")
+                .build();
+
+        UserDetails sophie = User.builder()
+                .username("sophie")
+                .password(passwordEncoder().encode("sophie"))
+                .roles("ADMIN")
+                .build();
+
+        return new InMemoryUserDetailsManager(alex,sophie);
+    }
+}
+```
+Zoals je ziet zijn er twee gebruiker aangemaakt. Namelijk user `alex` met wachtwoord `alex` en admin `sophie` met wachtwoord `sophie`.
+3. Herstart de Spring Boot applicatie
+4. Probeer nu in te loggen met een niet gedefineerde gebruikersnaam en wachtwoord. Bijvoorbeeld als `user`. Wat is het resultaat?
+5. Probeer nu in the loggen als user `alex` met een onjuist wachtwoord. Als het goed is lukt dit niet.
+6. Probeer nu in te loggen als user `alex` met het juiste wachtwoord. Welke van de volgende endpoints kan je gebruiken en bij welke krijg je een `403 Forbidden` melding?
+* `/hello`
+* `/message/1`
+* `/actuator/health`
+7. Herhaal de vorige stap alleen nu log je in als admin `sophie`. Kan je nu alle endpoint benaderen?
+
+
+## 5.3 Security Testen
+Voer al je testen uit. Als het goed is gaan de tests fout die een endpoint testen. Zoals `HelloControllerIntegrationTests` en `HelloControllerTests`. We gaan dit op twee verschillende manier laten zien hoe je dit kan oplossen. 
+
+### Oplossing 1: Security uitschakelen voor tests.
+1. Maak in de test directory de package `com.ittopdogs.certicoach.config.security`
+2. Maak in deze package de `TestSecurityConfig` klasse met de onderstaande code erin. Dit is een security configuratie die aangeeft dat je niet hoeft in te loggen.
+```java
+package com.ittopdogs.certicoach.config.security;
+
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+@TestConfiguration
+public class TestSecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(Customizer.withDefaults());
+        return http.build();
+    }
+}
+
+```
+3. Ga naar de `HelloControllerTests` klasse en voeg aan de klasse de annotatie `@Import(TestSecurityConfig.class)`. Hiermee geef je aan dat je de security configuratie wilt gebruiken die je in de vorige stap heb aangemaakt (dus hierdoor hoef je niet in te loggen). De klasse ziet er dan uit als volgt:
+```java
+package com.ittopdogs.certicoach.controller;
+
+import com.ittopdogs.certicoach.config.security.TestSecurityConfig;
+import com.ittopdogs.certicoach.provider.HelloMessageProvider;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@WebMvcTest(HelloController.class)
+@Import(TestSecurityConfig.class)
+public class HelloControllerTests {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private HelloMessageProvider messageProvider;
+
+    @Test
+    public void testHelloEndpoint_ReturnsHelloWorld() throws Exception {
+        // Arrange: Stel de verwachte boodschap in op de mock
+        when(messageProvider.getMessage()).thenReturn("Hello World!");
+
+        // Act & Assert: Verzend een GET-verzoek en controleer het resultaat
+        mockMvc.perform(get("/hello"))
+                .andExpect(status().isOk()) // Verwacht een 200 OK status
+                .andExpect(content().string("Hello World!")); // Controleer of de inhoud klopt
+    }
+}
+```
+4. Draai de tests in `HelloControllerTests` opnieuw. Als het goed is moet je test nu wel slagen.
+
+### Oplossing 2: Authenticatie toevoegen aan je test
+1. Ga naar `HelloControllerIntegrationTests` en geef een valide gebruikersnaam en wachtwoord mee met je web verzoek. Dit kan je doen als volgt: `mockMvc.perform(get("/hello").with(httpBasic("alex", "alex")))`. Hieronder de volledige code van `HelloControllerIntegrationTests`.
+```java
+package com.ittopdogs.certicoach.controller;
+
+import com.ittopdogs.certicoach.CertiCoachApplication;
+import com.ittopdogs.certicoach.provider.HelloMessageProvider;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest(classes = CertiCoachApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureMockMvc // This ensures MockMvc is properly configured
+public class HelloControllerIntegrationTests {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private HelloMessageProvider messageProvider; // Echte bean wordt geïnjecteerd
+
+    @Test
+    public void testHelloEndpoint_ReturnsActualMessage() throws Exception {
+        String expectedMessage = messageProvider.getMessage();
+
+        mockMvc.perform(get("/hello").with(httpBasic("alex", "alex")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedMessage));
+    }
+}
+```
+
+
+## 5.4 Message Controller
+1. Pas de `MessageController` naar het onderstaande aan. Zoals je ziet is de `getMessage` methode aangemaakt. Het geeft nu een `ResponseEntity<Message>` terug. Daarnaast is de methode `postMessage` toegevoegd.
+```java
+package com.ittopdogs.certicoach.controller;
+
+import com.ittopdogs.certicoach.model.Message;
+import com.ittopdogs.certicoach.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+
+@RestController
+
+public class MessageController {
+
+    private final MessageRepository messageRepository;
+
+    @Autowired
+    public MessageController(MessageRepository messageRepository) {
+        this.messageRepository = messageRepository;
+    }
+
+    // GET endpoint om een bericht op te halen via het id
+    @GetMapping("/message/{id}")
+    public ResponseEntity<Message> getMessage(@PathVariable Long id) {
+        Optional<Message> message = messageRepository.findById(id);
+        return message.map(ResponseEntity::ok).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    // POST endpoint om een nieuw bericht op te slaan
+    @PostMapping("/message")
+    public ResponseEntity<Message> postMessage(@RequestBody Message message) {
+        Message savedMessage = messageRepository.save(message);
+        return new ResponseEntity<>(savedMessage, HttpStatus.CREATED);
+    }
+}
+```
+
+## 5.5 MessageControllerIntegrationTests
+1. Maak in de package `com.ittopdogs.certicoach.controller` de testklasse `MessageControllerIntegrationTests` aan met onderstaande code.
+```java
+package com.ittopdogs.certicoach.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ittopdogs.certicoach.CertiCoachApplication;
+import com.ittopdogs.certicoach.model.Message;
+import com.ittopdogs.certicoach.repository.MessageRepository;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest(classes = CertiCoachApplication.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@AutoConfigureMockMvc // This ensures MockMvc is properly configured
+@ActiveProfiles("test")
+public class MessageControllerIntegrationTests {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private MessageRepository messageRepository;
+
+    @Test
+    public void testGetMessageEndpoint_ReturnsMessage() throws Exception {
+        // Arrange/
+        Message expectedMessage = new Message();
+        expectedMessage.setContent("hello");
+        messageRepository.save(expectedMessage);
+
+        String expectedContent = STR."""
+        {"id":1,"content":"\{expectedMessage.getContent()}"}""";
+
+        // Act & Assert
+        mockMvc.perform(get("/message/1").with(httpBasic("sophie", "sophie")))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    public void testPostMessageEndpoint_SavesActualMessage() throws Exception {
+        // Arrange
+        String expectedContent = "Verwacht bericht :)";
+        Message message = new Message();
+        message.setContent(expectedContent);
+        String messageJson = new ObjectMapper().writeValueAsString(message);
+
+        // Act
+        MvcResult result = mockMvc.perform(post("/message")
+                        .content(messageJson)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(httpBasic("sophie", "sophie")) // Basic Auth voor authenticatie
+                        .with(csrf())) // Voeg het CSRF-token toe
+                .andReturn();
+
+        // Haal de JSON-string op uit het resultaat en converteer naar een Message-object
+        String jsonResponse = result.getResponse().getContentAsString();
+        Message actualMessage = new ObjectMapper().readValue(jsonResponse, Message.class);
+
+        // Assert
+        assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus()); // Verwacht een 201 CREATED status
+
+        // Verwacht dat de content van de Message overeenkomt met de input en dat de Id is gezet.
+        assertEquals(expectedContent, actualMessage.getContent());
+        assertNotNull(actualMessage.getId());
+    }
+}
+```
+2. Draai deze test. Wat krijg je voor resultaat?
+3. Vind je deze tests goed? Ontbreken er nog testcases?
+4. Zou je al deze testcases maken voor elke endpoint? Waarom wel of waarom niet?
+5. In de tests wordt soms een CSRF-token toegevoegd. Waarom is dit en is dit wel nodig?
+
+## 5.6 OAuth Authenticatie
+
+### Auth2 applicatie aanmaken in GitHub
+1. Ga naar github.com en login met je gebruikersnaam en wachtwoord.
+2. Klik rechtsboven op je eigen icoon. Klik hierna op `Settings` en hierna op `Developer Settings`. Als het goed ben je nu op de pagina: https://github.com/settings/apps
+3. Klik nu op `OAuth Apps` en klik op de knop `New OAuth app`.
+4. Maak nu een een OAuth applicatie aan met de onderstaande gegevens.
+   Application name: `api-certicoach`
+   Homepage URL: `http://localhost:8080`
+   Authorization callback URL: `http://localhost:8080/login/oauth2/code/github`
+
+5. Wanneer je `Register Application` heb gedrukt kom je in de instellingen van de api-certicoach. Klik op `Generate a new client secret`. 
+6. Zorg dat je de Client ID en Client secret ergens opslaat of onthoud.
+
+
+### Dependency toevoegen in het Spring Boot project
+1. Ga naar IntelliJ en ga naar de `pom.xml`
+2. Voeg de OAuth client dependency toe. Het volgende zou toegevoegd moeten zijn aan je code.
+```xml
+<dependencies>
+    ....
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-oauth2-client</artifactId>
+		</dependency>
+</dependencies>
+```
+3. Herlaad voor de zekerheid je Maven project door met de rechtermuisknop op het project of de `pom.xml` te klikken en dan `Maven -> Reload Project`
+
+### Configureren van OAuth in het Spring Boot project
+1. Ga naar de `application.yaml` en voeg het volgende toe aan het bestand:
+```yaml
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ovxxxxxxxxx
+            client-secret: b4xxxxxxxxxxxxxxxxxxxxxxx
+```
+2. Pas de client-id en client-secret waarden aan met degene die je hebt aangemaakt in GitHub.
+
+## Oude authenticatie methode uitschakelen
+1. Ga naar de klasse `SecurityConfig` in de package `com.ittopdogs.certicoach.configuration.security`.
+2. Maak dat de annotaties `@Configuration`, `@EnableWebSecurity`, `@EnableMethodSecurity` niet meer worden gebruikt. Bijvoorbeeld door ze te verwijderen of door uit te commentariëren zoals hieronder.
+```java
+package com.ittopdogs.certicoach.configuration.security;
+
+//all imports
+
+// Commented out the following annotations to enable Auth2 authentication.
+//@Configuration
+//@EnableWebSecurity
+//@EnableMethodSecurity
+public class SecurityConfig {
+    //implementation
+}
+```
+
+
+### Testen of Auth2 werkt
+1. Herstart de Spring Boot applicatie en ga naar localhost:8080 in je browser
+2. Klik op de knop `Authorize {username}`. Je https://docs.github.com/en/apps/oauth-apps/using-oauth-apps/authorizing-oauth-apps
+3. Controleer nu of je bij alle endpoints kan.
+
+### Toegang aanpassen
+1. Pas nu de `SecurityConfig` klasse aan naar het onderstaande
+```java
+package com.ittopdogs.certicoach.configuration.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        http
+                .authorizeHttpRequests((authorize) -> {
+                    // Only users with the USER role can access /hello
+                    authorize.requestMatchers("/hello").hasRole("USER");
+                    // Only users with the ADMIN role can access the rest
+                    authorize.requestMatchers("/actuator/**", "/message/**").hasRole("ADMIN");
+
+                    // Deny access to any request for users without credentials
+                    authorize.anyRequest().authenticated();
+                })
+                .oauth2Login()
+                .defaultSuccessUrl("/dashboard", true);  // Redirect to dashboard after successful login
+        return http.build();
+    }
+
+}
+```
+2. Herstart de Spring Boot applicatie en ga naar localhost:8080 in je browser
+3. Controleer dat je niet bij alle endpoints kan.
+4. Pas de configuratie zo aan dat jij wel bij de endpoints kan, maar andere gebruikers niet.
+
+
+### Overzicht OAuth authenticatie
+1. Hieronder zie je een afbeelding van de OAuth architectuur. Geef aan wie of wat elk component is in het boven uitgevoerde scenario.
+![OAuth Architecture](practices/images/5/OAuth-architecture.png)
+
+
+## 5.7 JPA implementeren
+Implementeer nu zelf de security zodat de gebruikers uit de database worden gehaald. Tip: Maak een `User`-entiteit (met gebruikersnaam, wachtwoord en rollen) en bijhorende JPA repository klasse `UserRepository`. Maak daarnaast een eigen implementatie van de `UserDetailsService` om hiermee de gegevens op te halen uit de database.  
+
+Zie voor meer informatie:
+ - https://docs.spring.io/spring-security/reference/index.html
+- https://medium.com/@barbieri.santiago/implementing-user-authentication-in-java-apis-using-spring-boot-spring-security-and-spring-data-cb9eac2361f6
+

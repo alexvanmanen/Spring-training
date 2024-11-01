@@ -22,14 +22,19 @@
 - [4. Webapplicatie realiseren](#4-webapplicatie-realiseren)
     - [4.1 Maak de entiteiten aan](#41-maak-de-entiteiten-aan)
 - [5. Beveiliging](#5-beveiliging)
-  - [5.1 Dependency toevoegen](#51-dependency-toevoegen)
-  - [5.2 In memory authenticatie](#52-in-memory-authenticatie)
-  - [5.3 Security testen](#53-security-testen)
-  - [5.4 Message Controller](#54-message-controller)
-  - [5.5 Message Controller Integratietests](#55-messagecontrollerintegrationtests)
-  - [5.6 OAuth Authenticatie](#56-oauth-authenticatie)
-  - [5.7 JPA implementeren](#57-jpa-implementeren)
-    
+    - [5.1 Dependency toevoegen](#51-dependency-toevoegen)
+    - [5.2 In memory authenticatie](#52-in-memory-authenticatie)
+    - [5.3 Security testen](#53-security-testen)
+    - [5.4 Message Controller](#54-message-controller)
+    - [5.5 Message Controller Integratietests](#55-messagecontrollerintegrationtests)
+    - [5.6 OAuth Authenticatie](#56-oauth-authenticatie)
+    - [5.7 JPA implementeren](#57-jpa-implementeren)
+- [6. Aspect Oriented Programming](#6-aspect-oriented-programming)
+    - [6.1 Dependency toevoegen](#61-dependency-toevoegen)
+    - [6.2 Eenvoudige loging aspect maken](#62-eenvoudige-loggingaspect-aanmaken)
+    - [6.3 Aspect testen](#63-aspect-testen)
+    - [6.4 Eigen aspect maken](#64-eigen-aspect-maken))
+
 
 
 # Introductie
@@ -55,11 +60,11 @@ Daarnaast zijn er opdrachten die je helpen een beter begrip te krijgen van de we
 3. Vul in de onderstaande gegevens en druk op Next
    ![new project](/practices/images/1/1/new-project.png)
 4. Selecteer de volgende dependencies en klik op Create
-![dependencies](/practices/images/1/1/dependencies.png)
+   ![dependencies](/practices/images/1/1/dependencies.png)
 6. Je hebt, als je het correct hebt uitgevoerd, de volgende structuur
-![structure](/practices/images/1/1/structure.png)
+   ![structure](/practices/images/1/1/structure.png)
 7. Druk op de play-knop (zie rode pijl) om de Spring Boot applicatie te starten. Als het goed is krijg je naar een paar seconden te zien dat de applicatie is gestart (zie rode ovaal).
-![run-project](/practices/images/1/1/run-project.png)
+   ![run-project](/practices/images/1/1/run-project.png)
 
 ## 1.2 Project op GitHub
 
@@ -76,7 +81,7 @@ Daarnaast zijn er opdrachten die je helpen een beter begrip te krijgen van de we
 ## 1.3 Dependency Management
 In de vorige opdracht hebben we dependencies allemaal dependencies geselecteerd. Deze kun terugvinden in de `pom.xml`
 
-1. Open `pom.xml` controleer of je de juiste Spring Boot versie gebruikt. Namelijk versie 3.3.4. 
+1. Open `pom.xml` controleer of je de juiste Spring Boot versie gebruikt. Namelijk versie 3.3.4.
 ```xml
     <project>
     ......
@@ -110,9 +115,9 @@ In de vorige opdracht hebben we dependencies allemaal dependencies geselecteerd.
     </dependencies>
 ```
 3. We gaan voor nu de dependencies verwijderen die we op dit moment niet gebruiken, maar op een later moment wel. Klik hiervoor op `Edit Starters` zoals ook in de afbeelding hier beneden is aangegeven.
-![change-dependencies](/practices/images/1/2/change-dependencies.png)
+   ![change-dependencies](/practices/images/1/2/change-dependencies.png)
 4. Pas het overzicht van dependencies aan, zodat het overeenkomt met de onderstaande afbeelding en druk op OK.
-![new-dependencies-overview](/practices/images/1/2/new-dependencies-overview.png)
+   ![new-dependencies-overview](/practices/images/1/2/new-dependencies-overview.png)
 5. Controleer dat de dependencies niet meer bestaan in `pom.xml`.
 
 ## 1.4 Controller aanmaken
@@ -186,7 +191,7 @@ public class HelloController {
 }
 ```
 
-4. Draai de applicatie opnieuw. Je krijgt als het goed is krijg je nu de foutmelding. De Bean `HelloMessageProvider` kan niet worden gevonden. 
+4. Draai de applicatie opnieuw. Je krijgt als het goed is krijg je nu de foutmelding. De Bean `HelloMessageProvider` kan niet worden gevonden.
 ```text
 ***************************
 APPLICATION FAILED TO START
@@ -204,7 +209,7 @@ Consider defining a bean of type 'com.ittopdogs.certicoach.provider.HelloMessage
 
 Process finished with exit code 1
 ```
-5. Voeg nu toe aan je de `HelloConfiguration` de annotatie `@Configuration` zoals hieronder.  
+5. Voeg nu toe aan je de `HelloConfiguration` de annotatie `@Configuration` zoals hieronder.
 ```java
 package com.ittopdogs.certicoach.configuration;
 
@@ -224,7 +229,7 @@ public class HelloConfiguration {
 6. Start de Spring Boot applicatie
 7. Ga in je browser naar `localhost:8080/hello` als het goed is krijg je de response `Hello World`
 
-### Wat gebeurt er nu? 
+### Wat gebeurt er nu?
 De `@Configuration`-annotatie in Spring markeert een klasse als bron van bean-definities voor de Spring IoC-container (Inversion of Control). Het geeft aan dat de klasse één of meer methoden bevat, geannoteerd met `@Bean`, die beans aanmaken en beheren binnen de Spring-context.
 
 In het onderstaande voorbeeld is de klasse `HelloConfiguration` geannoteerd met `@Configuration`, wat betekent dat Spring de `messageProvider()`-methode, gemarkeerd met `@Bean`, gebruikt om een `HelloMessageProvider`-bean aan de IoC-container toe te voegen. Wanneer de Spring-context opstart, wordt deze bean beheerd en beschikbaar gesteld voor injectie in andere delen van de applicatie, zoals in de `HelloController`.
@@ -232,7 +237,7 @@ In het onderstaande voorbeeld is de klasse `HelloConfiguration` geannoteerd met 
 ## 1.6 Auto-configuratie
 Spring Boot doet aan auto-configuratie. Dit houdt in dat alle instellingen standaard worden ingesteld. Bijvoorbeeld dat de Tomcat webserver draait op port `8080`. Dit kun je aanpassen in de `application.yml` of de `application.properties`.
 1. Open `src/main/resources/application.properties`.
-2. Voeg een extra regel toe aan dit bestand 
+2. Voeg een extra regel toe aan dit bestand
 ```properties
 spring.application.content=CertiCoach
 server.port=80
@@ -240,8 +245,8 @@ server.port=80
 3. Start de applicatie opnieuw en browse naar `localhost:80/hello` of nog beter `localhost/hello` (browser gaat standaard naar port 80). Als het goed is krijg je nu _Hello World!_ te zien,
 
 4. We gaan nu de properties file veranderen naar een YAML-bestand. De reden hiervoor is onder andere de leesbaarheid en vermindering van herhaling.
-   1. Pas het bestand aan naar `application.yaml`
-   2. Verander de inhoud van `application.yaml` naar het onderstaande
+    1. Pas het bestand aan naar `application.yaml`
+    2. Verander de inhoud van `application.yaml` naar het onderstaande
    ```yaml
    spring:
      application:
@@ -249,11 +254,11 @@ server.port=80
    server:
      port: 80
    ```
-   3. Start de applicatie opnieuw en browse naar `localhost/hello`. Als het goed is krijg je nu nog steeds _Hello World!_ te zien,
-   
+    3. Start de applicatie opnieuw en browse naar `localhost/hello`. Als het goed is krijg je nu nog steeds _Hello World!_ te zien,
+
 
 5. We gaan nu de context-path aanpassen, zodat alle endpoints beginnen met een bepaalde prefix
-   1. Verander de inhoud van `application.yaml` naar het onderstaande
+    1. Verander de inhoud van `application.yaml` naar het onderstaande
    ```yaml
    spring:
      application:
@@ -263,7 +268,7 @@ server.port=80
      servlet:
        context-path: /api
    ```
-   2. Start de applicatie opnieuw en browse naar `localhost/api/hello` (`localhost/hello` werkt nu niet meer). Als het goed is krijg je nu nog steeds _Hello World!_ te zien,
+    2. Start de applicatie opnieuw en browse naar `localhost/api/hello` (`localhost/hello` werkt nu niet meer). Als het goed is krijg je nu nog steeds _Hello World!_ te zien,
 
 ## 1.7 Unit test schrijven
 We gaan nu een test schrijven om de klasse `HelloMessageProvider` te testen. Als het goed is bestaat in de directory `src/test/java/com/ittopdogs/certicoach` het bestand `CertiCoachApplicationTests.java`.
@@ -290,7 +295,7 @@ public class HelloMessageProviderTests {
     }
 }
 ```
-3. Draai nu alle testklassen door in IntelliJ met je rechtermuisknop op de directory `src/test/java` en klik op  `Run Tests in 'java'`. 
+3. Draai nu alle testklassen door in IntelliJ met je rechtermuisknop op de directory `src/test/java` en klik op  `Run Tests in 'java'`.
 4. Als het goed is draaien nu de tests uit twee klassen. Namelijk `HelloMessageProviderTests` en `CertiCoachApplicationTests`. Hoeveel tijd kost het elk van deze testsklassen om uitgevoerd te worden?
 
 
@@ -416,7 +421,7 @@ spring:
 
 ## 2.2 JPA entiteit toevoegen
 1. Maak de package `com.ittopdogs.certicoach.model` aan.
-2. Maak de klasse `Message.java` aan en zet hierin de onderstaande code 
+2. Maak de klasse `Message.java` aan en zet hierin de onderstaande code
 
 ```java
 import javax.persistence.Entity;
@@ -471,7 +476,7 @@ INSERT INTO message (id, content) VALUES (3, 'Goed bezig!');
 3. Start de Spring Boot applicatie op en ga naar de h2 concole en controleer of de data te vinden is.
 
 ## 2.4 JPA Repository aanmaken en gebruiken
-1. Maak de package `com.ittopdogs.certicoach.repository` 
+1. Maak de package `com.ittopdogs.certicoach.repository`
 2. Maak in deze package de klasse `MessageRepository` aan en zet hierin de onderstaande code.
 ```java
 package com.ittopdogs.certicoach.repository;
@@ -482,7 +487,7 @@ import org.springframework.data.repository.CrudRepository;
 public interface MessageRepository extends CrudRepository<Message, Long> {
 }
 ```
-3. Maak in de package `com.ittopdogs.certicoach.controller` de klasse `MessageController` aan en geef het de onderstaande inhoud. 
+3. Maak in de package `com.ittopdogs.certicoach.controller` de klasse `MessageController` aan en geef het de onderstaande inhoud.
 ```java
 package com.ittopdogs.certicoach.controller;
 
@@ -642,11 +647,11 @@ Voor nu houden we het bij in-memory authenticatie, database-gebaseerde authentic
 ```
 Using generated security password: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
-4. Ga nu in je browser naar `localhost:8080/hello`. Als het goed is krijg je nu een login scherm te zien. 
+4. Ga nu in je browser naar `localhost:8080/hello`. Als het goed is krijg je nu een login scherm te zien.
 5. Login met username `user` en het wachtwoord dat je gekopieerd hebt uit stap 3. Als het goed is ben je nu ingelogd.
 
 ## 5.2 In memory authenticatie
-1. Maak een nieuw package aan met de naam `com.ittopdogs.certicoach.configuration.security`. 
+1. Maak een nieuw package aan met de naam `com.ittopdogs.certicoach.configuration.security`.
 2. Maak in deze package de klasse `SecurityConfig.java` aan met de onderstaande inhoud.
 ```java
 package com.ittopdogs.certicoach.configuration.security;
@@ -729,7 +734,7 @@ Zoals je ziet zijn er twee gebruiker aangemaakt. Namelijk user `alex` met wachtw
 
 
 ## 5.3 Security Testen
-Voer al je testen uit. Als het goed is gaan de tests fout die een endpoint testen. Zoals `HelloControllerIntegrationTests` en `HelloControllerTests`. We gaan dit op twee verschillende manier laten zien hoe je dit kan oplossen. 
+Voer al je testen uit. Als het goed is gaan de tests fout die een endpoint testen. Zoals `HelloControllerIntegrationTests` en `HelloControllerTests`. We gaan dit op twee verschillende manier laten zien hoe je dit kan oplossen.
 
 ### Oplossing 1: Security uitschakelen voor tests.
 1. Maak in de test directory de package `com.ittopdogs.certicoach.config.security`
@@ -983,7 +988,7 @@ public class MessageControllerIntegrationTests {
    Homepage URL: `http://localhost:8080`
    Authorization callback URL: `http://localhost:8080/login/oauth2/code/github`
 
-5. Wanneer je `Register Application` heb gedrukt kom je in de instellingen van de api-certicoach. Klik op `Generate a new client secret`. 
+5. Wanneer je `Register Application` heb gedrukt kom je in de instellingen van de api-certicoach. Klik op `Generate a new client secret`.
 6. Zorg dat je de Client ID en Client secret ergens opslaat of onthoud.
 
 
@@ -1035,7 +1040,7 @@ public class SecurityConfig {
 
 ### Testen of Auth2 werkt
 1. Herstart de Spring Boot applicatie en ga naar localhost:8080 in je browser
-2. Klik op de knop `Authorize {username}`. Je https://docs.github.com/en/apps/oauth-apps/using-oauth-apps/authorizing-oauth-apps
+2. Klik op de knop `Authorize {username}`. [Hier](https://docs.github.com/en/apps/oauth-apps/using-oauth-apps/authorizing-oauth-apps) kan je lezen waarmee je mee instemt)
 3. Controleer nu of je bij alle endpoints kan.
 
 ### Toegang aanpassen
@@ -1083,13 +1088,61 @@ public class SecurityConfig {
 
 ### Overzicht OAuth authenticatie
 1. Hieronder zie je een afbeelding van de OAuth architectuur. Geef aan wie of wat elk component is in het boven uitgevoerde scenario.
-![OAuth Architecture](practices/images/5/OAuth-architecture.png)
+   ![OAuth Architecture](practices/images/5/OAuth-architecture.png)
 
 
 ## 5.7 JPA implementeren
-Implementeer nu zelf de security zodat de gebruikers uit de database worden gehaald. Tip: Maak een `User`-entiteit (met gebruikersnaam, wachtwoord en rollen) en bijhorende JPA repository klasse `UserRepository`. Maak daarnaast een eigen implementatie van de `UserDetailsService` om hiermee de gegevens op te halen uit de database.  
+Implementeer nu zelf de security zodat de gebruikers uit de database worden gehaald. Tip: Maak een `User`-entiteit (met gebruikersnaam, wachtwoord en rollen) en bijhorende JPA repository klasse `UserRepository`. Maak daarnaast een eigen implementatie van de `UserDetailsService` om hiermee de gegevens op te halen uit de database.
 
 Zie voor meer informatie:
- - https://docs.spring.io/spring-security/reference/index.html
+- https://docs.spring.io/spring-security/reference/index.html
 - https://medium.com/@barbieri.santiago/implementing-user-authentication-in-java-apis-using-spring-boot-spring-security-and-spring-data-cb9eac2361f6
 
+
+# 6. Aspect Oriented Programming
+Aspect-Oriented Programming (AOP) is een programmeerparadigma waarmee je cross-cutting concerns, zoals logging, beveiliging en transacties, los kunt koppelen van de kernfunctionaliteit van je code. Het helpt bij het scheiden van zaken die op meerdere plekken voorkomen, zoals logging, zonder dat je deze logica overal hoeft toe te voegen. AOP werkt met "advices" (uit te voeren acties) die toegepast worden op "join points" (specifieke punten in de code, zoals methoden). Aspecten, die deze advices bevatten, worden toegepast op "pointcuts", die bepalen waar in de code het aspect van kracht is. In Spring Boot wordt AOP vaak gebruikt voor herbruikbare, niet-functionele logica en maakt gebruik van de @Aspect-annotatie.
+
+## 6.1 Dependency toevoegen
+1. Ga naar IntelliJ en ga naar de `pom.xml`
+2. Voeg de Aspect Oriented Programming dependency toe. Het volgende zou toegevoegd moeten zijn aan je code.
+```xml
+<dependencies>
+...    
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+</dependencies>
+```
+3.
+
+## 6.2 Eenvoudige LoggingAspect aanmaken
+1. Maak de package `com.ittopdogs.certicoach.aspect` aan.
+2. Maak de klasse `LoggingAspect` aan en zet hierin het onderstaande.
+```java
+package com.ittopdogs.certicoach.aspect;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.stereotype.Component;
+
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.ittopdogs.certicoach.controller.*.*(..))")
+    public void logBeforeMethod() {
+        System.out.println("Een methode in de controller wordt zo aangeroepen");
+    }
+}
+```
+3. Kijk naar de `@Before` annotatie. Wanneer verwacht je dat dit wordt aangeroepen?
+
+## 6.3 Aspect testen
+1. Herlaad voor de zekerheid je Maven project door met de rechtermuisknop op het project of de `pom.xml` te klikken en dan `Maven -> Reload Project`
+2. Herstart de Spring Boot applicatie.
+3. Ga in je browser naar `http://localhost:8080/message`. Wat zie je in je Spring Boot console?
+
+## 6.4 Eigen aspect maken
+1. Maak een stukje code die iets print in de Spring Boot console nadat een controller method is aangeroepen. De documentatie is hieronder te vinden.
+   
+https://docs.spring.io/spring-framework/reference/core/aop.html

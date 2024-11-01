@@ -85,34 +85,34 @@ In de vorige opdracht hebben we dependencies allemaal dependencies geselecteerd.
 ```xml
     <project>
     ......
-      <parent>
+    <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.3.4</version>
         <relativePath/> <!-- lookup parent from repository -->
-      </parent>
-      <groupId>com.ittopdogs</groupId>
-      <artifactId>CertiCoach</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-      <content>CertiCoach</content>
-      <description>CertiCoach</description>
+    </parent>
+    <groupId>com.ittopdogs</groupId>
+    <artifactId>CertiCoach</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <content>CertiCoach</content>
+    <description>CertiCoach</description>
     ......
-    </project>
+</project>
 ```
 
 2. Ga hierna in hetzelfde bestand en kijk of je alle dependencies die hebt aangegeven tijdens het aanmaken van het project kan terugvinden. Zoals de Spring Security en Spring Data JPA.
 ```xml
     <dependencies>
-      <dependency>
+    <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-rest</artifactId>
-      </dependency>
-      <dependency>
+    </dependency>
+    <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
-      </dependency>
+    </dependency>
     ......
-    </dependencies>
+</dependencies>
 ```
 3. We gaan voor nu de dependencies verwijderen die we op dit moment niet gebruiken, maar op een later moment wel. Klik hiervoor op `Edit Starters` zoals ook in de afbeelding hier beneden is aangegeven.
    ![change-dependencies](/practices/images/1/2/change-dependencies.png)
@@ -131,10 +131,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloController {
 
-  @GetMapping("/hello")
-  public String hello() {
-    return "Hello World";
-  }
+    @GetMapping("/hello")
+    public String hello() {
+        return "Hello World";
+    }
 }
 ```
 2. Start de Spring Boot applicatie
@@ -220,10 +220,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration /* ✚ Adding new configuration annotation line */
 public class HelloConfiguration {
 
-  @Bean
-  HelloMessageProvider messageProvider() {
-    return new HelloMessageProvider();
-  }
+    @Bean
+    HelloMessageProvider messageProvider() {
+        return new HelloMessageProvider();
+    }
 }
 ```
 6. Start de Spring Boot applicatie
@@ -388,14 +388,14 @@ In deze opdrachten gaan we de data opslaan in een database
 1. Voeg de dependencies "Spring Data JPA" en "H2 database" toe aan je project. Als het goed is het volgende toevoegd aan je `pom.xml`
 ```xml
         <dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+<dependency>
+<groupId>com.h2database</groupId>
+<artifactId>h2</artifactId>
+<scope>runtime</scope>
+</dependency>
 ```
 2. Configureer de H2 database in de `application.yaml`
 ```yaml
@@ -998,10 +998,10 @@ public class MessageControllerIntegrationTests {
 ```xml
 <dependencies>
     ....
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-oauth2-client</artifactId>
-		</dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-oauth2-client</artifactId>
+    </dependency>
 </dependencies>
 ```
 3. Herlaad voor de zekerheid je Maven project door met de rechtermuisknop op het project of de `pom.xml` te klikken en dan `Maven -> Reload Project`
@@ -1107,11 +1107,11 @@ Aspect-Oriented Programming (AOP) is een programmeerparadigma waarmee je cross-c
 2. Voeg de Aspect Oriented Programming dependency toe. Het volgende zou toegevoegd moeten zijn aan je code.
 ```xml
 <dependencies>
-...    
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
+    ...
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
 </dependencies>
 ```
 
@@ -1143,5 +1143,24 @@ public class LoggingAspect {
 
 ## 6.4 Eigen aspect maken
 1. Maak een stukje code die iets print in de Spring Boot console nadat een controller method is aangeroepen. De documentatie is hieronder te vinden.
-   
-https://docs.spring.io/spring-framework/reference/core/aop.html
+   https://docs.spring.io/spring-framework/reference/core/aop.html
+   Antwoord:
+```java
+ @AfterReturning(
+            pointcut = "execution(* com.ittopdogs.certicoach.controller.*.*(..))",
+            returning = "retVal")
+    public void doAccessCheck(JoinPoint joinPoint, Object retVal) {
+        String methodName = joinPoint.getSignature().getName(); // Get method name
+        String className = joinPoint.getSignature().getDeclaringTypeName(); // Get class name
+
+        // Retrieve the authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = (authentication != null) ? authentication.getName() : "Anonymous";
+
+        // Retrieve method arguments
+        Object[] args = joinPoint.getArgs();
+        String arguments = Arrays.toString(args);
+
+        logger.info("User '{}' executed method: {}.{} with arguments {} returned {}", username, className, methodName, arguments, retVal);
+    }
+```
